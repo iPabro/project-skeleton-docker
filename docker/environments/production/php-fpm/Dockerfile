@@ -17,7 +17,7 @@ COPY ./ ./
 #if vendor existst, remove it
 RUN rm -rf vendor .env
 ##COPY ./project_settings/.env ./.env
-RUN composer install --no-dev --prefer-dist --no-progress --optimize-autoloader \
+RUN composer install --no-dev --no-scripts --prefer-dist --no-progress --optimize-autoloader \
     && rm -rf /root/.composer/cache
 
 RUN chmod -R 777 storage bootstrap/cache && chown -R $USER:82 storage && chown -R $USER:82 bootstrap/cache
