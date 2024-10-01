@@ -76,28 +76,6 @@ services:
             - default
             - mysql-public
 
-#    nginx-db-api:
-#        build:
-#            context: docker/environments
-#            dockerfile: development/nginx/Dockerfile
-#        volumes:
-#            - ./db-api:/app
-#            - ./docker/environments/common/nginx/db-api.conf.d:/etc/nginx/conf.d
-#        networks:
-#            - default
-#            - db-api
-#
-#    php-fpm-db-api:
-#        build:
-#            context: docker/environments
-#            dockerfile: development/php-fpm/Dockerfile
-#        volumes:
-#            - ./db-api:/app
-#        networks:
-#            - mysql-public
-#            - default
-#            - db-api
-
     cucumber-node-cli:
         build:
             context: cucumber/docker/development/node
@@ -122,5 +100,3 @@ networks:
         name: traefik-public
     mysql-public:
         name: mysql-public
-    db-api:
-        name: db-api
