@@ -53,9 +53,7 @@ prepare-npm:
 	docker compose exec node npm install
 	docker compose exec node npm run dev
 
-start-proj: down remove-git-untracked init-dev init-db-api composer-install copy-env check-database-alive fill-database prepare-npm
-
-
+start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database
 
 
 
