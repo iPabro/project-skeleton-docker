@@ -1,0 +1,134 @@
+version: "3.8"
+services:
+  oldmysql:
+    image: mysql:5.6.39
+    command: "--default-authentication-plugin=mysql_native_password"
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: my-local
+      MYSQL_USER: my-local
+      MYSQL_PASSWORD: my-local
+      MYSQL_ROOT_PASSWORD: my-local
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/environments/development/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./docker/mysql_local_data:/usr/data
+    networks:
+      - mysql-public
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: oldmysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - 8085:80
+    networks:
+      - mysql-public
+  traefik:
+    image: traefik:2.4
+    command:
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --entryPoints.http.address=:80
+    ports:
+      - "80:80"
+    networks:
+      - traefik-public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      # for traefik dashboard
+      - traefik.http.routers.traefik.entrypoints=http
+      - traefik.http.routers.traefik.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.traefik.service=api@internal
+      # Define cors-headers middleware
+      - traefik.http.middlewares.cors-headers.headers.accesscontrolalloworiginlist=*
+      - traefik.http.middlewares.cors-headers.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS
+      - traefik.http.middlewares.cors-headers.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With,ngrok-skip-browser-warning
+      - traefik.http.middlewares.cors-headers.headers.accesscontrolmaxage=100
+      - traefik.http.middlewares.cors-headers.headers.addvaryheader=true
+
+  nginx:
+    build:
+      context: docker/environments
+      dockerfile: development/nginx/Dockerfile
+    volumes:
+      - ./:/app
+    networks:
+      - default
+      - traefik-public
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.my-project.rule=Host(`localhost`)
+      - traefik.http.routers.my-project.entryPoints=http
+      - traefik.http.services.my-project.loadBalancer.server.port=80
+      - traefik.http.routers.my-project.middlewares=cors-headers@docker
+
+
+  php-fpm:
+    build:
+      context: docker/environments
+      dockerfile: development/php-fpm/Dockerfile
+    volumes:
+      - ./:/app
+    networks:
+      - default
+      - mysql-public
+
+  #    nginx-db-api:
+  #        build:
+  #            context: docker/environments
+  #            dockerfile: development/nginx/Dockerfile
+  #        volumes:
+  #            - ./db-api:/app
+  #            - ./docker/environments/common/nginx/db-api.conf.d:/etc/nginx/conf.d
+  #        networks:
+  #            - default
+  #            - db-api
+  #
+  #    php-fpm-db-api:
+  #        build:
+  #            context: docker/environments
+  #            dockerfile: development/php-fpm/Dockerfile
+  #        volumes:
+  #            - ./db-api:/app
+  #        networks:
+  #            - mysql-public
+  #            - default
+  #            - db-api
+
+  cucumber-node-cli:
+    build:
+      context: cucumber/docker/development/node
+    volumes:
+      - ./cucumber:/app
+    network_mode: service:traefik
+
+  node:
+    build:
+      context: docker/environments
+      dockerfile: development/node/Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/app
+    #чтоб постоянно в работе был (чтоб к портам других контейнеров был привязан) т.к. если через run запускать, порты сами по себе
+    command: tail -f /dev/null
+    restart: unless-stopped
+
+networks:
+  traefik-public:
+    name: traefik-public
+  mysql-public:
+    name: mysql-public
+  db-api:
+    name: db-api

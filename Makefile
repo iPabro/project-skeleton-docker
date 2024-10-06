@@ -53,7 +53,10 @@ prepare-npm:
 	docker compose exec node npm install
 	docker compose exec node npm run dev
 
-start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database
+generate-laravel-app-key:
+	docker compose exec php-fpm php artisan key:generate
+
+start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
 
 
 
