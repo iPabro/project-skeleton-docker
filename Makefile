@@ -19,7 +19,8 @@ down:
 	docker compose down --remove-orphans
 
 #ad-hoc
-init-dev: proj-permissions build-nginx-common build-php-fpm-common start-dev
+#init-dev: proj-permissions build-nginx-common build-php-fpm-common start-dev
+init-dev: build-nginx-common build-php-fpm-common start-dev
 
 
 #ad-hoc
@@ -56,7 +57,9 @@ prepare-npm:
 generate-laravel-app-key:
 	docker compose exec php-fpm php artisan key:generate
 
-start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
+#start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
+
+start-proj: down init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
 
 
 
