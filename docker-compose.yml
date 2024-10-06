@@ -62,8 +62,6 @@ services:
             - traefik.http.routers.my-project.rule=Host(`localhost`)
             - traefik.http.routers.my-project.entryPoints=http
             - traefik.http.services.my-project.loadBalancer.server.port=80
-            - traefik.http.routers.my-project.middlewares=cors-headers@docker
-
 
     php-fpm:
         image: ipabro/php-fpm
