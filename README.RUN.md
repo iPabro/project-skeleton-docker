@@ -7,7 +7,6 @@
 - Запустить или пересобрать (например, если переключились на другую ветку). ВСЕ НЕЗАКОММИЧЕННЫЕ ИЗМЕНЕНИЯ ПОТЕРЯЮТСЯ:
   - `sudo make start-proj` - почему-то иногда с первого раза node не запускается, помогает снова пересобрать `sudo make start-proj`
 
-
 После запуска проект будет находиться по адресу:
 - http://localhost
 
@@ -20,4 +19,5 @@
 - `docker compose exec php-fpm composer dump-autoload`
 - `docker compose exec node npm run dev`
 
-
+#### Запуск без докеров
+- `sudo make start-proj-bare`

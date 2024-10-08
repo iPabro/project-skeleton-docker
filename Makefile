@@ -65,6 +65,16 @@ generate-laravel-app-key:
 # Main start-proj target
 start-proj: down copy-env start-dev-pull composer-install check-database-alive fill-database generate-laravel-app-key
 
+# Запустить без докеров
+start-proj-bare:
+	copy-env
+	@echo "Отредактируйте .env файл для настройки подключения к БД."
+	@read -p "Нажмите любую клавишу для продолжения после завершения..." -n1 -s
+	composer install
+	php artisan migrate:fresh --seed
+	php artisan key:generate
+
+
 init-db-api: db-api-permissions db-api-composer-install db-api-copy-env
 
 db-api-permissions:
