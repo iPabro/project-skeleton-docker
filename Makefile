@@ -63,7 +63,7 @@ generate-laravel-app-key:
 #start-proj: down remove-git-untracked init-dev-constuct composer-install copy-env check-database-alive fill-database generate-laravel-app-key
 
 # Main start-proj target
-start-proj: down copy-env start-dev-pull composer-install check-database-alive fill-database generate-laravel-app-key post_start_proj
+start-proj: down copy-env start-dev-pull composer-install check-database-alive fill-database generate-laravel-app-key
 
 init-db-api: db-api-permissions db-api-composer-install db-api-copy-env
 
