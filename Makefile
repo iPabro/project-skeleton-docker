@@ -67,7 +67,7 @@ start-proj: down copy-env start-dev-pull composer-install check-database-alive f
 
 # Запустить без докеров
 start-proj-bare:
-	copy-env
+	make copy-env
 	@echo "Отредактируйте .env файл для настройки подключения к БД."
 	@read -p "Нажмите любую клавишу для продолжения после завершения..." -n1 -s
 	composer install
