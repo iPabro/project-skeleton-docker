@@ -38,6 +38,14 @@ composer-install:
 
 
 remove-git-untracked:
+	@if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Внимание! Есть незакоммиченные изменения. Они потеряются, если продолжить"; \
+		read -p "Продолжить? [y/N] " answer; \
+		if [ "$$answer" != "y" ] && [ "$$answer" != "Y" ]; then \
+			echo "Операция отменена."; \
+			exit 1; \
+		fi; \
+	fi
 	git clean -xdf
 
 copy-env:
