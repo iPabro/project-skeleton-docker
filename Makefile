@@ -41,8 +41,13 @@ remove-git-untracked:
 	git clean -xdf
 
 copy-env:
-	cp .env.example .env
-	chown 1000:82 .env
+	if [ ! -f .env ]; then \
+		cp .env.example .env; \
+		chown 1000:82 .env; \
+		echo ".env файл скопирован."; \
+	else \
+		echo ".env уже существует, пропускаю копирование."; \
+	fi
 
 check-database-alive:
 	@echo "Ожидание запуска базы данных..."
@@ -67,9 +72,9 @@ start-proj: down copy-env start-dev-pull composer-install check-database-alive f
 
 # Запустить без докеров
 start-proj-bare:
-	make copy-env
-	@echo "Отредактируйте .env файл для настройки подключения к БД."
-	@read -p "Нажмите любую клавишу для продолжения после завершения..." -n1 -s
+	sudo make copy-env
+	@echo "Если надо, отредактируйте .env файл для настройки подключения к БД."
+	@read -p "Нажмите Enter для продолжения..." dummy
 	composer install
 	php artisan migrate:fresh --seed
 	php artisan key:generate
