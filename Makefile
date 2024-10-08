@@ -9,6 +9,9 @@ build-nginx-common:
 build-php-fpm-common:
 	docker --log-level=debug build --file=docker/environments/common/php-fpm/Dockerfile --tag=php-fpm-common --progress=plain docker/environments
 
+start-dev-pull:
+	docker compose up -d --pull always
+
 start-dev:
 	docker compose up -d --build
 
@@ -19,8 +22,8 @@ down:
 	docker compose down --remove-orphans
 
 #ad-hoc
-#init-dev: proj-permissions build-nginx-common build-php-fpm-common start-dev
-init-dev: build-nginx-common build-php-fpm-common start-dev
+#init-dev-constuct: proj-permissions build-nginx-common build-php-fpm-common start-dev
+init-dev-constuct: build-nginx-common build-php-fpm-common start-dev-pull
 
 
 #ad-hoc
@@ -57,10 +60,31 @@ prepare-npm:
 generate-laravel-app-key:
 	docker compose exec php-fpm php artisan key:generate
 
-#start-proj: down remove-git-untracked init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
+#start-proj: down remove-git-untracked init-dev-constuct composer-install copy-env check-database-alive fill-database generate-laravel-app-key
 
-start-proj: down init-dev composer-install copy-env check-database-alive fill-database generate-laravel-app-key
 
+-include project-specific.mk
+
+# Define default values for callback targets
+PRE_START_PROJ ?= pre_start_proj_default
+POST_START_PROJ ?= post_start_proj_default
+
+# Default targets that do nothing unless overridden in project-specific.mk
+pre_start_proj_default:
+	@echo "No project-specific pre-start steps defined."
+
+post_start_proj_default:
+	@echo "No project-specific post-start steps defined."
+
+# Main start-proj target
+start-proj: down copy-env start-dev-pull composer-install pre_start_proj check-database-alive fill-database generate-laravel-app-key post_start_proj
+
+# Wrapper targets for pre and post steps
+pre_start_proj:
+	@$(PRE_START_PROJ)
+
+post_start_proj:
+	@$(POST_START_PROJ)
 
 
 init-db-api: db-api-permissions db-api-composer-install db-api-copy-env
