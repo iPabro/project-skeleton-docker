@@ -1,19 +1,5 @@
-#e2e ad-hoc
-e2e:
-	docker compose run --rm cucumber-node-cli yarn e2e
-
-#Запуск проекта с перестройкой или без
-build-nginx-common:
-	docker --log-level=debug build --file=docker/environments/common/nginx/Dockerfile --tag=nginx-common --progress=plain docker/environments
-
-build-php-fpm-common:
-	docker --log-level=debug build --file=docker/environments/common/php-fpm/Dockerfile --tag=php-fpm-common --progress=plain docker/environments
-
 start-dev-pull:
 	docker compose up -d --pull always
-
-start-dev:
-	docker compose up -d --build
 
 up:
 	docker compose up -d
@@ -22,20 +8,14 @@ down:
 	docker compose down --remove-orphans
 
 #ad-hoc
-#init-dev-constuct: proj-permissions build-nginx-common build-php-fpm-common start-dev
-init-dev-constuct: build-nginx-common build-php-fpm-common start-dev-pull
-
-
-#ad-hoc
 proj-permissions:
-	chmod -R 755 storage bootstrap/cache
-	find storage -type f -exec chmod 644 {} \;
-	find bootstrap/cache -type f -exec chmod 644 {} \;
-	chown -R 1000:82 .
+	sudo chmod -R 755 storage bootstrap/cache
+	sudo find storage -type f -exec chmod 644 {} \;
+	sudo find bootstrap/cache -type f -exec chmod 644 {} \;
+	sudo chown -R 1000:82 .
 
 composer-install:
 	docker compose exec php-fpm composer install
-
 
 remove-git-untracked:
 	@if [ -n "$$(git status --porcelain)" ]; then \
@@ -88,6 +68,29 @@ start-proj-bare:
 	php artisan key:generate
 
 
+
+
+
+
+start-dev:
+	docker compose up -d --build
+
+#ad-hoc
+#init-dev-constuct: proj-permissions build-nginx-common build-php-fpm-common start-dev
+init-dev-constuct: build-nginx-common build-php-fpm-common start-dev
+
+#e2e ad-hoc
+e2e:
+	docker compose run --rm cucumber-node-cli yarn e2e
+
+#Запуск проекта с перестройкой или без
+build-nginx-common:
+	docker --log-level=debug build --file=docker/environments/common/nginx/Dockerfile --tag=nginx-common --progress=plain docker/environments
+
+build-php-fpm-common:
+	docker --log-level=debug build --file=docker/environments/common/php-fpm/Dockerfile --tag=php-fpm-common --progress=plain docker/environments
+
+
 init-db-api: db-api-permissions db-api-composer-install db-api-copy-env
 
 db-api-permissions:
@@ -101,3 +104,5 @@ db-api-composer-install:
 
 db-api-copy-env:
 	cp db-api/.env.example db-api/.env
+
+

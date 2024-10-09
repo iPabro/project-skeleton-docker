@@ -6,20 +6,19 @@ RUN apk add --no-cache \
       acl \
       libpq-dev \
       libpng-dev \
+      libjpeg-turbo-dev \
+      libwebp-dev \
       libzip-dev \
       freetype-dev \
       unzip \
-      icu-dev \
-  && docker-php-ext-configure gd --with-freetype \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
   && docker-php-ext-install \
-      bcmath \
+      bcmath\
       gd \
       mysqli \
       pdo \
       pdo_mysql \
-      opcache \
-      intl \
-      zip
+      opcache
 
 COPY ./common/php/conf.d /usr/local/etc/php/conf.d
 COPY ./common/php/php-fpm.d /usr/local/etc/php-fpm.d
