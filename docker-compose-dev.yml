@@ -19,7 +19,9 @@ services:
     networks:
       - mysql-public
   phpmyadmin:
-    image: phpmyadmin
+    build:
+      context: docker/environments
+      dockerfile: development/phpmyadmin/Dockerfile
     environment:
       PMA_HOST: oldmysql
       PMA_PORT: 3306

@@ -90,6 +90,8 @@ build-nginx-common:
 build-php-fpm-common:
 	docker --log-level=debug build --file=docker/environments/common/php-fpm/Dockerfile --tag=php-fpm-common --progress=plain docker/environments
 
+build-phpmyadmin:
+	docker --log-level=debug build --file=docker/environments/development/phpmyadmin/Dockerfile --tag=ipabro/phpmyadmin --progress=plain docker/environments
 
 init-db-api: db-api-permissions db-api-composer-install db-api-copy-env
 

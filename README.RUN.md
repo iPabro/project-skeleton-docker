@@ -19,6 +19,12 @@
 - `docker compose exec php-fpm composer dump-autoload`
 - `docker compose exec node npm run dev`
 
+###Тесты
+Чтоб запустить тесты на локалке
+- `docker compose run --rm cucumber-node-cli yarn e2e-ci`
+
+Чтоб убрать тесты, зайди в cucumber/features и там содержимое файлов с расширением .feature закомментируй с помощью #
+
 #### Запуск без докеров
 - `make start-proj-bare`
 - затем, если надо в браузере запускать - `php artisan serve`

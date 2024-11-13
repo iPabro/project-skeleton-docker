@@ -19,7 +19,7 @@ services:
         networks:
             - mysql-public
     phpmyadmin:
-        image: phpmyadmin
+        image: ipabro/phpmyadmin
         environment:
             PMA_HOST: oldmysql
             PMA_PORT: 3306
