@@ -73,7 +73,8 @@ start-proj-bare:
 
 
 start-dev:
-	docker compose up -d --build
+	docker compose -f docker-compose-dev.yml up -d --build
+
 
 #ad-hoc
 #init-dev-constuct: proj-permissions build-nginx-common build-php-fpm-common start-dev
