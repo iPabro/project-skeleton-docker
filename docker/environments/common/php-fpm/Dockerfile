@@ -24,6 +24,7 @@ RUN apk add --no-cache \
       opcache \
       intl \
       zip \
+      pcntl \
       gmp
 
 COPY ./common/php/conf.d /usr/local/etc/php/conf.d
