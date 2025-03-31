@@ -26,7 +26,7 @@ phpmyadmin
 
 `docker images` - посмотреть, какие сейчас есть образы в системе
 `docker login` - залогиниться в докере, чтоб можно было отправлять образы
-docker push ipabro/nginx
-docker push ipabro/php-fpm
-docker push ipabro/phpmyadmin
+`docker push ipabro/nginx`
+`docker push ipabro/php-fpm`
+`docker push ipabro/phpmyadmin`
 
