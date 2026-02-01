@@ -7,9 +7,13 @@
 # Окружения
 Скрипт используется и на локалке и на продакшне и на деве.
 На локалке и продакшне
+```bash
 curl -s "https://gist.githubusercontent.com/iPabro/d6e9db68bb8bd08b251ccd63287b0481/raw/d.sh?$(date +%s)" | bash
+```
 Для доработки этого скрипта
+```bash
 curl -s "https://gist.githubusercontent.com/iPabro/d6e9db68bb8bd08b251ccd63287b0481/raw/d.sh?$(date +%s)" | bash -s dev
+```
 Тогда docker-compose не скопируется, а docker-compose-dev.yml превратится docker-compose.yml - чтоб можно было билдить, а не качать готовые образы
 
 В целом и дальше по установке на рабочие проекты в README.RUN.MD
