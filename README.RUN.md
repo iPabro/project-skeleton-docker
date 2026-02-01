@@ -1,3 +1,7 @@
+### Для работы через docker сначала запусти
+`curl -s "https://gist.githubusercontent.com/iPabro/d6e9db68bb8bd08b251ccd63287b0481/raw/d.sh?$(date +%s)" | bash`
+команда скачает файл из gist, запустит его локально и выполнится команда: скачает файлы docker-compose.yml и Make, добавит в .gitignore файлы, которые не нужны в гите.
+
 #### Для запуска:
 - в системе должны быть установлены docker и docker-compose (https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
 - в системе должен быть make `apt install make`
