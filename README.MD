@@ -18,6 +18,9 @@ curl -s "https://gist.githubusercontent.com/iPabro/d6e9db68bb8bd08b251ccd63287b0
 
 В целом и дальше по установке на рабочие проекты в README.RUN.MD
 
+# Readme проекта, где будешь применять, дополни инструкцией
+В проект, куда будешь применять постоянно в самый верх основного Readme добавь строки из файла README FIRST STRINGS
+
 # Далее инструкция по доработке этого докер-окружения:
 
 #### Собрать
@@ -47,4 +50,5 @@ phpmyadmin
 `docker push ipabro/nginx`
 `docker push ipabro/php-fpm`
 `docker push ipabro/phpmyadmin`
+
 
