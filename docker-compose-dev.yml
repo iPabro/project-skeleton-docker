@@ -31,7 +31,7 @@ services:
     networks:
       - mysql-public
   traefik:
-    image: traefik:2.4
+    image: traefik:2.11
     command:
       - --api.dashboard=true
       - --providers.docker=true
