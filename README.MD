@@ -23,12 +23,28 @@ curl -s "https://gist.githubusercontent.com/iPabro/d6e9db68bb8bd08b251ccd63287b0
 
 # Далее инструкция по доработке этого докер-окружения:
 
+#### Как устроены слои (важно понять перед сборкой)
+
+Образы собираются в **два слоя**, один поверх другого:
+
+1. **Первый слой — общий (`common`).** Это тяжёлый базовый образ: базовый `php:8.2-fpm-alpine`, установка системных пакетов, компиляция PHP-расширений (`pdo_mysql`, `pdo_pgsql`, `gd`, `intl`, `zip` и т.д.), Composer, общие конфиги, пользователь `app`, `HEALTHCHECK`. То, что одинаково для всех окружений. Файлы: `docker/environments/common/...`.
+2. **Второй слой — окружение (`development` / `stage` / `production`).** Тонкая надстройка **поверх** общего слоя — он начинается с `FROM php-fpm-common` (или `FROM nginx-common`). Сюда добавляются только конфиги конкретного окружения и нужный `php.ini` (для development — `php.ini-development`). Файлы: `docker/environments/development/...`.
+
+**Порядок обязателен: сначала собираем общий слой, потом окружение.** Если общий слой не собран, сборка второго слоя упадёт с ошибкой «не найден образ `php-fpm-common`».
+
+> Системные зависимости и PHP-расширения (например `pdo_pgsql`) добавляются **в первый, общий слой** (`docker/environments/common/php-fpm/Dockerfile`). Тогда они автоматически попадают и в development, и в stage/production при их следующей пересборке.
+
 #### Собрать
-сбилдить общий nginx
+
+Шаг 1 — общие (базовые) образы:
+
+общий nginx
 `make build-nginx-common`
 
 общий php-fpm
 `make build-php-fpm-common`
+
+Шаг 2 — образы окружения development (собираются поверх общих):
 
 nginx development
 `docker --log-level=debug build --file=docker/environments/development/nginx/Dockerfile --tag=ipabro/nginx --progress=plain docker/environments`
