@@ -14,6 +14,7 @@ RUN apk add --no-cache \
       icu-dev \
       gmp \
       gmp-dev \
+      postgresql-client \
   && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
   && docker-php-ext-install \
       bcmath\
